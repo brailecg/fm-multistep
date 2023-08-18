@@ -18,7 +18,15 @@ module.exports = {
           lightest: "#EFF5FF",
           lighter: "#ABBCFF",
           light: "#BEE2FD",
+          lightdark: "#164a8a",
           dark: "#022959",
+        },
+        fmgrey: {
+          grey: "#9699aa",
+          greylight: "#d6d9e6",
+        },
+        fmred: {
+          red: "#ee374a",
         },
       },
     },
