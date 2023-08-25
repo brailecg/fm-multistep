@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import { useFormContext } from "@/store/FormContext";
+
 import { HeaderShapePink } from "./svg/HeaderShapePink";
 import { HeaderShapeBlue } from "./svg/HeaderShapeBlue";
 import { HeaderShapeOrange } from "./svg/HeaderShapeOrange";
@@ -13,10 +15,10 @@ const stepsArray = [
 ];
 
 const Nav = () => {
-  const [activeStep, setActiveStep] = useState(1);
+  const { activeStep } = useFormContext();
   return (
     <nav
-      className={` rounded-none md:rounded-xl px-0 py-0 md:px-8 md:py-10 flex overflow-hidden border-0  bg-fmblue-one h-[172px] relative md:min-h-full md:w-[274px]`}>
+      className={`rounded-none md:rounded-xl px-0 py-0 md:px-8 md:py-10 flex overflow-hidden   bg-fmblue-one h-[172px] relative md:min-h-full md:w-[274px]`}>
       <div className={` z-20 w-full`}>
         <ul
           className={` flex flex-row md:flex-col justify-center mt-9 space-x-4 space-y-0 md:space-y-4 md:space-x-0`}>
@@ -45,8 +47,8 @@ const Nav = () => {
         </ul>
       </div>
 
-      <HeaderShapeOrange className={` absolute z-10 -left-20 -bottom-10`} />
-      <HeaderShapeBlue className={` absolute z-0 -bottom-[4.5rem] -left-20`} />
+      <HeaderShapeOrange className={` absolute z-20 -left-20 -bottom-10`} />
+      <HeaderShapeBlue className={` absolute z-10 -bottom-[4.5rem] -left-20`} />
       <HeaderShapePink className={` absolute z-10 -bottom-[4.5rem] -right-5`} />
       <HeaderShapeTri className={` absolute z-10 bottom-10 right-20 `} />
     </nav>

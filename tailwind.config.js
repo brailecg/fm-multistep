@@ -24,6 +24,7 @@ module.exports = {
         fmgrey: {
           grey: "#9699aa",
           greylight: "#d6d9e6",
+          greyligher: "#f8f9ff",
         },
         fmred: {
           red: "#ee374a",
