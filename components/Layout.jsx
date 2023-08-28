@@ -15,7 +15,7 @@ const Layout = ({ children }) => {
         <div className={` h-full md:flex relative`}>
           <Nav />
           <div
-            className={` h-screen md:h-fit mb-20 md:mb-0 relative min-h-min w-full flex flex-col justify-between items-center md:items-stretch md:ml-24`}>
+            className={` h-screen md:h-full mb-20 md:mb-0 relative min-h-min w-full flex flex-col justify-between items-center md:items-stretch md:ml-24`}>
             {children}
             <Footer />
           </div>

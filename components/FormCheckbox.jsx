@@ -2,13 +2,14 @@ import React from "react";
 
 const FormCheckbox = ({ id, addon, checkedAddon, setCheckedAddon }) => {
   const checkHandler = (isChecked) => {
-    const checkedArr = [...checkedAddon];
+    let checkedArr = [...checkedAddon];
     // setIsChecked(!isChecked);
     console.log({ isChecked });
     if (isChecked) {
       checkedArr.push(id);
     } else {
-      checkedArr.filter((item) => item !== id);
+      console.log(id);
+      checkedArr = checkedArr.filter((item) => item !== id);
     }
     setCheckedAddon([...checkedArr]);
     console.log({ checkedArray: checkedArr });

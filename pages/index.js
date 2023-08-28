@@ -4,38 +4,28 @@ import Layout from "@/components/Layout";
 import FormHeader from "@/components/FormHeader";
 import Form from "@/components/Form";
 import { ThankYouLarge, ThankYouMobile } from "@/components/svg/ThankYou";
+import { useEffect } from "react";
 
 export default function Home() {
-  const { activeStep } = useFormContext();
-
-  const formHeaderObj = {
-    1: {
-      title: "Personal Info",
-      subtitle: "Please provide your name, email address, and phone number.",
-    },
-    2: {
-      title: "Select your plan",
-      subtitle: "You have the option of monthly or yearly billing.",
-    },
-    3: {
-      title: "Pick add-ons",
-      subtitle: "Add-ons help enhance your gaming experience.",
-    },
-    4: {
-      title: "Finishing up",
-      subtitle: "Double-check everything looks OK before confirming.",
-    },
-  };
+  const { activeStep, setStepsLength, stepsLength, steps } = useFormContext();
 
   return (
     <Layout>
       <div
         className={` -top-20 z-50 bg-white w-[90%] rounded-lg absolute px-6 md:px-0 py-8 md:static  md:h-full`}>
-        {activeStep <= Object.keys(formHeaderObj).length ? (
-          <FormHeader
-            title={formHeaderObj[activeStep].title}
-            subtitle={formHeaderObj[activeStep].subtitle}
-          />
+        {activeStep <= stepsLength ? (
+          steps.map((step, index) => {
+            if (step.step === activeStep) {
+              console.log("run header step");
+              return (
+                <FormHeader
+                  key={index}
+                  title={step.header.title}
+                  subtitle={step.header.subtitle}
+                />
+              );
+            }
+          })
         ) : (
           <div className={` h-full flex flex-col items-center justify-center`}>
             <div className={` hidden md:block`}>

@@ -1,6 +1,13 @@
 import React from "react";
 
-export const FormInput = ({ label, placeholder, error, labelFor }) => {
+export const FormInput = ({
+  value,
+  label,
+  placeholder,
+  error,
+  labelFor,
+  onInputChange,
+}) => {
   return (
     <div className={` flex flex-col md:space-y-1`}>
       <label
@@ -14,12 +21,14 @@ export const FormInput = ({ label, placeholder, error, labelFor }) => {
         )}
       </label>
       <input
+        value={value}
         type="text"
         id={labelFor}
         placeholder={placeholder}
         className={` hover:border-fmblue-one border ${
           error ? "border-fmred-red" : "border-fmgrey-greylight"
         }  rounded-md h-10 md:h-12 px-4  placeholder:text-[15px] md:placeholder:text-base`}
+        onChange={(e) => onInputChange(labelFor, e.target.value)}
       />
     </div>
   );

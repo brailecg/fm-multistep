@@ -15,6 +15,7 @@ module.exports = {
       colors: {
         fmblue: {
           one: "#483EFF",
+          onelight: "#928CFF",
           lightest: "#EFF5FF",
           lighter: "#ABBCFF",
           light: "#BEE2FD",
