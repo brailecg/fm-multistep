@@ -1,20 +1,6 @@
 import React from "react";
 
-const FormCheckbox = ({ id, addon, checkedAddon, setCheckedAddon }) => {
-  const checkHandler = (isChecked) => {
-    let checkedArr = [...checkedAddon];
-    // setIsChecked(!isChecked);
-    console.log({ isChecked });
-    if (isChecked) {
-      checkedArr.push(id);
-    } else {
-      console.log(id);
-      checkedArr = checkedArr.filter((item) => item !== id);
-    }
-    setCheckedAddon([...checkedArr]);
-    console.log({ checkedArray: checkedArr });
-  };
-
+const FormCheckbox = ({ id, addon, checkHandler, checkedItems }) => {
   return (
     <div className="w-full flex gap-2">
       <input

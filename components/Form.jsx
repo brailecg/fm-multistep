@@ -8,25 +8,10 @@ import { ToggleIcon } from "./svg/ToggleIcon";
 import FormCheckbox from "./FormCheckbox";
 
 const Form = () => {
-  const { activeStep, setFormAnswers, formError, formAnswers } =
+  const { activeStep, setFormAnswers, formError, formAnswers, addonsList } =
     useFormContext();
 
-  const [selectedPlan, setSelectedPlan] = useState(1);
-  const [selectedPlanFrequency, setSelectedPlanFrequenty] = useState(true); // true = monthly, false= yearly
-
   const [checkedAddon, setCheckedAddon] = useState([]);
-
-  const onInputChange = (inputField, val) => {
-    setFormAnswers((prev) => {
-      return {
-        ...prev,
-        1: {
-          ...prev[1],
-          [inputField]: val,
-        },
-      };
-    });
-  };
 
   const plansArray = [
     {
@@ -55,32 +40,26 @@ const Form = () => {
     },
   ];
 
-  const addonsArray = [
-    {
-      id: 1,
-      addonName: "Online Service",
-      addonDescription: "Access to multiplayer games",
-      addonPriceMonthly: "+$1/mo",
-      addonPriceYearly: "+$10/yr",
-      checked: false,
-    },
-    {
-      id: 2,
-      addonName: "Larger storage",
-      addonDescription: "Extra 1TB of cloud save",
-      addonPriceMonthly: "+$2/mo",
-      addonPriceYearly: "+$20/yr",
-      checked: false,
-    },
-    {
-      id: 3,
-      addonName: "Customizable profile",
-      addonDescription: "Custom theme on your profile",
-      addonPriceMonthly: "+$2/mo",
-      addonPriceYearly: "+$20/yr",
-      checked: false,
-    },
-  ];
+  const currentPlan =
+    formAnswers[activeStep]?.plan !== undefined
+      ? formAnswers[2].plan
+      : plansArray[0]?.id;
+  const planFrequency =
+    formAnswers[activeStep]?.frequency != undefined
+      ? formAnswers[activeStep].frequency
+      : true;
+
+  const onInputChange = (inputField, val) => {
+    setFormAnswers((prev) => {
+      return {
+        ...prev,
+        1: {
+          ...prev[1],
+          [inputField]: val,
+        },
+      };
+    });
+  };
 
   const selectPlan = (id) => {
     setFormAnswers((prev) => {
@@ -92,20 +71,44 @@ const Form = () => {
         },
       };
     });
-    setSelectedPlan(id);
   };
 
-  const handleToggle = (freq) => {
+  const handleToggle = () => {
     setFormAnswers((prev) => {
       return {
         ...prev,
         2: {
           ...prev[2],
-          frequency: !selectedPlanFrequency ? "Monthly" : "Yearly",
+          frequency: !planFrequency,
         },
       };
     });
-    setSelectedPlanFrequenty((prev) => !prev);
+  };
+
+  const addAddon = () => {
+    setFormAnswers((prev) => {
+      return {
+        ...prev,
+        3: {
+          ...prev[3],
+          addons: checkedAddon,
+        },
+      };
+    });
+  };
+
+  const checkHandler = (isChecked, id) => {
+    let checkedArr = [...checkedAddon];
+
+    if (isChecked) {
+      checkedArr = [...checkedArr, id];
+    } else {
+      checkedArr = checkedArr.filter((item) => item !== id);
+    }
+    console.log({ checkedArr });
+    // setCheckedAddon([...checkedArr]);
+    // addAddon();
+    console.log({ checkedArray: checkedArr });
   };
 
   return (
@@ -139,96 +142,110 @@ const Form = () => {
         </>
       )}
 
-      {activeStep === 2 && (
-        <>
-          <div
-            className={` flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4`}>
-            {plansArray.map((plan) => {
-              return (
-                <button
-                  onClick={() => selectPlan(plan.id, selectedPlanFrequency)}
-                  key={plan.id}
-                  className={` ${
-                    plan.id === selectedPlan
-                      ? "border-fmblue-one bg-fmgrey-greyligher"
-                      : "border-fmgrey-greylight bg-white"
-                  } border  rounded-lg px-4 py-5 flex flex-row items-start md:flex-col md:flex-1 md:justify-between`}>
-                  <div className={` mr-4 md:mb-10`}>{plan.planIcon}</div>
+      {activeStep === 2 &&
+        (() => {
+          if (formAnswers[activeStep] === undefined) {
+            setFormAnswers((prev) => {
+              return {
+                ...prev,
+                2: {
+                  ...prev[2],
+                  frequency: planFrequency,
+                  plan: currentPlan,
+                },
+              };
+            });
+          }
+          return (
+            <>
+              <div
+                className={` flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4`}>
+                {plansArray.map((plan) => {
+                  return (
+                    <button
+                      onClick={() => selectPlan(plan.id, planFrequency)}
+                      key={plan.id}
+                      className={` ${
+                        plan.id === currentPlan
+                          ? "border-fmblue-one bg-fmgrey-greyligher"
+                          : "border-fmgrey-greylight bg-white"
+                      } border  rounded-lg px-4 py-5 flex flex-row items-start md:flex-col md:flex-1 md:justify-between`}>
+                      <div className={` mr-4 md:mb-10`}>{plan.planIcon}</div>
+                      <div
+                        className={` flex flex-col items-start space-y-1 md:space-y-2`}>
+                        <p className={` text-fmblue-dark font-medium`}>
+                          {plan.planName}
+                        </p>
+                        <p className={` text-sm text-fmgrey-grey`}>
+                          {planFrequency
+                            ? plan.planPriceMonthly
+                            : plan.planPriceYearly}
+                        </p>
+                        {!planFrequency && (
+                          <p className={` text-xs text-fmblue-dark`}>
+                            {plan.planPriceYearlyFree}
+                          </p>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+              <div
+                className={` flex justify-center items-center space-x-3 h-12 bg-fmgrey-greyligher rounded-lg `}>
+                <p
+                  className={` text-sm font-medium ${
+                    planFrequency ? " text-fmblue-dark " : " text-fmgrey-grey"
+                  }`}>
+                  Monthly
+                </p>
+                <button onClick={handleToggle}>
+                  <ToggleIcon planFreq={planFrequency} />
+                </button>
+                <p
+                  className={` text-sm font-medium ${
+                    !planFrequency ? " text-fmblue-dark " : " text-fmgrey-grey"
+                  }`}>
+                  Yearly
+                </p>
+              </div>
+            </>
+          );
+        })()}
+      {activeStep === 3 &&
+        (() => {
+          return (
+            <>
+              {addonsList.map((addon) => {
+                return (
                   <div
-                    className={` flex flex-col items-start space-y-1 md:space-y-2`}>
-                    <p className={` text-fmblue-dark font-medium`}>
-                      {plan.planName}
-                    </p>
-                    <p className={` text-sm text-fmgrey-grey`}>
-                      {selectedPlanFrequency
-                        ? plan.planPriceMonthly
-                        : plan.planPriceYearly}
-                    </p>
-                    {!selectedPlanFrequency && (
-                      <p className={` text-xs text-fmblue-dark`}>
-                        {plan.planPriceYearlyFree}
-                      </p>
+                    key={addon.id}
+                    className={` ${
+                      formAnswers[3]?.addons.includes(addon.id)
+                        ? "border-fmblue-one bg-fmgrey-greyligher"
+                        : "border-fmgrey-greylight bg-white"
+                    } border  rounded-lg px-4 py-5  flex justify-between items-center`}>
+                    <FormCheckbox
+                      id={addon.id}
+                      addon={addon}
+                      checkHandler={checkHandler}
+                      checkedItems={formAnswers[3]?.addons}
+                    />
+                    {planFrequency ? (
+                      <div className={` text-fmblue-one text-xs`}>
+                        {addon.addonPriceMonthly}
+                      </div>
+                    ) : (
+                      <div className={` text-fmblue-one text-xs`}>
+                        {addon.addonPriceYearly}
+                      </div>
                     )}
                   </div>
-                </button>
-              );
-            })}
-          </div>
-          <div
-            className={` flex justify-center items-center space-x-3 h-12 bg-fmgrey-greyligher rounded-lg `}>
-            <p
-              className={` text-sm font-medium ${
-                selectedPlanFrequency
-                  ? " text-fmblue-dark "
-                  : " text-fmgrey-grey"
-              }`}>
-              Monthly
-            </p>
-            <button onClick={handleToggle}>
-              <ToggleIcon planFreq={selectedPlanFrequency} />
-            </button>
-            <p
-              className={` text-sm font-medium ${
-                !selectedPlanFrequency
-                  ? " text-fmblue-dark "
-                  : " text-fmgrey-grey"
-              }`}>
-              Yearly
-            </p>
-          </div>
-        </>
-      )}
-      {activeStep === 3 && (
-        <>
-          {addonsArray.map((addon) => {
-            return (
-              <div
-                key={addon.id}
-                className={` ${
-                  addon.id === selectedPlan
-                    ? "border-fmblue-one bg-fmgrey-greyligher"
-                    : "border-fmgrey-greylight bg-white"
-                } border  rounded-lg px-4 py-5  flex justify-between items-center`}>
-                <FormCheckbox
-                  id={addon.id}
-                  addon={addon}
-                  checkedAddon={checkedAddon}
-                  setCheckedAddon={setCheckedAddon}
-                />
-                {selectedPlanFrequency ? (
-                  <div className={` text-fmblue-one text-xs`}>
-                    {addon.addonPriceMonthly}
-                  </div>
-                ) : (
-                  <div className={` text-fmblue-one text-xs`}>
-                    {addon.addonPriceYearly}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </>
-      )}
+                );
+              })}
+            </>
+          );
+        })()}
       {activeStep === 4 && (
         <>
           <div className={` bg-fmgrey-greyligher px-6 py-4`}>

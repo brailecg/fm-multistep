@@ -5,7 +5,6 @@ import { useFormContext } from "@/store/FormContext";
 const Footer = () => {
   const { activeStep, steps, formValidate, setActiveStep } = useFormContext();
 
-  console.log(steps.length);
   const nextStepForm = () => {
     // setActiveStep(activeStep + 1);
     formValidate(activeStep);

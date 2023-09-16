@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-import { getStepsArray } from "./data.services";
+import { getStepsArray, getAddonsArray } from "./data.services";
 
 const FormContext = createContext();
 
@@ -12,17 +12,12 @@ export const FormProvider = ({ children }) => {
   const [activeStep, setActiveStep] = useState(1);
   const [formAnswers, setFormAnswers] = useState({});
   const [steps, setSteps] = useState([]);
-
+  const [addonsList, setAddonsList] = useState({});
   const [formError, setFormError] = useState({});
-
-  const stepsGetter = async () => {
-    const appSteps = await getStepsArray();
-    setSteps(appSteps);
-  };
 
   useEffect(() => {
     console.log("call form header");
-    stepsGetter();
+
     // get form answers from localstorage
     initialAnswerHandler();
   }, []);
@@ -49,10 +44,13 @@ export const FormProvider = ({ children }) => {
     async function initializeApp() {
       try {
         const formAnswers = await getFormAnswers();
-
+        const appSteps = await getStepsArray();
+        const addons = await getAddonsArray();
         // Now you have the formAnswers data, and you can use it for initialization
+        setSteps(appSteps);
         setFormAnswers(formAnswers);
-        console.log(formAnswers);
+        setAddonsList(addons);
+        console.log({ formAnswers });
 
         // Perform your app initialization here, using formAnswers as needed
       } catch (error) {
@@ -96,10 +94,11 @@ export const FormProvider = ({ children }) => {
       } else {
         setFormError(errors);
       }
+    } else if (step === 2) {
+      setActiveStep(step + 1);
     }
   };
-  console.log(formError);
-  console.log(formAnswers);
+
   return (
     <FormContext.Provider
       value={{
@@ -110,6 +109,7 @@ export const FormProvider = ({ children }) => {
         steps,
         formValidate,
         formError,
+        addonsList,
       }}>
       {formAnswers !== undefined && children}
     </FormContext.Provider>

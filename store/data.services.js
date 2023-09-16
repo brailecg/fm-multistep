@@ -115,7 +115,7 @@ export const plansArray = [
   },
 ];
 
-export const addonsArray = [
+export const getAddonsArray = async () => [
   {
     id: 1,
     addonName: "Online Service",
