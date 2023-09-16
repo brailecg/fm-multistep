@@ -7,13 +7,13 @@ import { ThankYouLarge, ThankYouMobile } from "@/components/svg/ThankYou";
 import { useEffect } from "react";
 
 export default function Home() {
-  const { activeStep, setStepsLength, stepsLength, steps } = useFormContext();
+  const { activeStep, steps } = useFormContext();
 
   return (
     <Layout>
       <div
         className={` -top-20 z-50 bg-white w-[90%] rounded-lg absolute px-6 md:px-0 py-8 md:static  md:h-full`}>
-        {activeStep <= stepsLength ? (
+        {activeStep <= steps.length ? (
           steps.map((step, index) => {
             if (step.step === activeStep) {
               console.log("run header step");

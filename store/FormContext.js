@@ -1,12 +1,6 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useReducer,
-} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
-import { getFormHeaderObj, getStepsArray } from "./data.services";
+import { getStepsArray } from "./data.services";
 
 const FormContext = createContext();
 
@@ -14,11 +8,8 @@ export const useFormContext = () => {
   return useContext(FormContext);
 };
 
-const formReducer = (state, action) => {};
-
 export const FormProvider = ({ children }) => {
   const [activeStep, setActiveStep] = useState(1);
-  const [stepsLength, setStepsLength] = useState(0);
   const [formAnswers, setFormAnswers] = useState({});
   const [steps, setSteps] = useState([]);
 
@@ -27,7 +18,6 @@ export const FormProvider = ({ children }) => {
   const stepsGetter = async () => {
     const appSteps = await getStepsArray();
     setSteps(appSteps);
-    setStepsLength(appSteps.length);
   };
 
   useEffect(() => {
@@ -115,8 +105,6 @@ export const FormProvider = ({ children }) => {
       value={{
         activeStep,
         setActiveStep,
-        stepsLength,
-        setStepsLength,
         formAnswers,
         setFormAnswers,
         steps,
