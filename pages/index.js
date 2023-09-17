@@ -11,7 +11,7 @@ export default function Home() {
     <Layout>
       <div
         className={` -top-20 z-50 bg-white w-[90%] rounded-lg absolute px-6 md:px-0 py-8 md:static  md:h-full`}>
-        {activeStep <= steps.length ? (
+        {steps && activeStep <= steps.length ? (
           steps.map((step, index) => {
             if (step.step === activeStep) {
               return (

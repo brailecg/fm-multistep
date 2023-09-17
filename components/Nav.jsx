@@ -15,28 +15,29 @@ const Nav = () => {
       <div className={` z-20 w-full`}>
         <ul
           className={` flex flex-row md:flex-col justify-center mt-9 space-x-4 space-y-0 md:space-y-4 md:space-x-0`}>
-          {steps.map((step, index) => {
-            return (
-              <li key={index} className={` flex items-center`}>
-                <p
-                  className={` mr-4 flex justify-center items-center rounded-full w-8 h-8 ${
-                    activeStep === step.step
-                      ? " bg-fmblue-light text-fmblue-dark"
-                      : "border border-white text-white"
-                  }`}>
-                  {step.step}
-                </p>
-                <p className={`hidden md:flex flex-col`}>
-                  <span className={` text-fmblue-lighter uppercase text-xs`}>
-                    {step.title}
-                  </span>
-                  <span className={` text-sm font-bold text-white uppercase`}>
-                    {step.desc}
-                  </span>
-                </p>
-              </li>
-            );
-          })}
+          {steps &&
+            steps.map((step, index) => {
+              return (
+                <li key={index} className={` flex items-center`}>
+                  <p
+                    className={` mr-4 flex justify-center items-center rounded-full w-8 h-8 ${
+                      activeStep === step.step
+                        ? " bg-fmblue-light text-fmblue-dark"
+                        : "border border-white text-white"
+                    }`}>
+                    {step.step}
+                  </p>
+                  <p className={`hidden md:flex flex-col`}>
+                    <span className={` text-fmblue-lighter uppercase text-xs`}>
+                      {step.title}
+                    </span>
+                    <span className={` text-sm font-bold text-white uppercase`}>
+                      {step.desc}
+                    </span>
+                  </p>
+                </li>
+              );
+            })}
         </ul>
       </div>
 
