@@ -27,23 +27,7 @@ export default function Home() {
             }
           })
         ) : (
-          <div className={` h-full flex flex-col items-center justify-center`}>
-            <div className={` hidden md:block`}>
-              <ThankYouLarge />
-            </div>
-            <div className={` block md:hidden`}>
-              <ThankYouMobile />
-            </div>
-            <p
-              className={` mt-6 mb-2 text-2xl md:text-3xl text-fmblue-dark font-bold`}>
-              Thank you!
-            </p>
-            <p className={` text-fmgrey-grey text-center`}>
-              Thanks for confirming your subscription! We hope you have fun
-              using our platform. If you ever need support, please feel free to
-              email us at support@loremgaming.com.
-            </p>
-          </div>
+          <></>
         )}
         <Form />
       </div>
