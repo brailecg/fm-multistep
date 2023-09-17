@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { useFormContext } from "@/store/FormContext";
 
@@ -8,10 +8,20 @@ import { ToggleIcon } from "./svg/ToggleIcon";
 import FormCheckbox from "./FormCheckbox";
 
 const Form = () => {
-  const { activeStep, setFormAnswers, formError, formAnswers, addonsList } =
-    useFormContext();
+  const {
+    activeStep,
+    setActiveStep,
+    setFormAnswers,
+    formError,
+    formAnswers,
+    addonsList,
+  } = useFormContext();
 
   const [checkedAddon, setCheckedAddon] = useState([]);
+
+  useEffect(() => {
+    addAddon();
+  }, [checkedAddon]);
 
   const plansArray = [
     {
@@ -20,6 +30,8 @@ const Form = () => {
       planName: "Arcade",
       planPriceMonthly: "$9/mo",
       planPriceYearly: "$90/yr",
+      planPriceMonthlyNumber: 9,
+      planPriceYearlyNumber: 90,
       planPriceYearlyFree: "2 months free",
     },
     {
@@ -28,6 +40,8 @@ const Form = () => {
       planName: "Advanced",
       planPriceMonthly: "$12/mo",
       planPriceYearly: "$120/yr",
+      planPriceMonthlyNumber: 12,
+      planPriceYearlyNumber: 120,
       planPriceYearlyFree: "2 months free",
     },
     {
@@ -36,18 +50,18 @@ const Form = () => {
       planName: "Pro",
       planPriceMonthly: "$15/mo",
       planPriceYearly: "$150/yr",
+      planPriceMonthlyNumber: 15,
+      planPriceYearlyNumber: 150,
       planPriceYearlyFree: "2 months free",
     },
   ];
 
   const currentPlan =
-    formAnswers[activeStep]?.plan !== undefined
+    formAnswers[2]?.plan !== undefined
       ? formAnswers[2].plan
       : plansArray[0]?.id;
   const planFrequency =
-    formAnswers[activeStep]?.frequency != undefined
-      ? formAnswers[activeStep].frequency
-      : true;
+    formAnswers[2]?.frequency != undefined ? formAnswers[2].frequency : true;
 
   const onInputChange = (inputField, val) => {
     setFormAnswers((prev) => {
@@ -98,17 +112,18 @@ const Form = () => {
   };
 
   const checkHandler = (isChecked, id) => {
-    let checkedArr = [...checkedAddon];
+    let checkedArr =
+      formAnswers[3]?.addons != undefined
+        ? [...formAnswers[3].addons]
+        : [...checkedAddon];
 
     if (isChecked) {
       checkedArr = [...checkedArr, id];
     } else {
       checkedArr = checkedArr.filter((item) => item !== id);
     }
-    console.log({ checkedArr });
-    // setCheckedAddon([...checkedArr]);
-    // addAddon();
-    console.log({ checkedArray: checkedArr });
+
+    setCheckedAddon(checkedArr);
   };
 
   return (
@@ -214,6 +229,10 @@ const Form = () => {
         })()}
       {activeStep === 3 &&
         (() => {
+          const checkeItemsList =
+            formAnswers[3]?.addons != undefined
+              ? formAnswers[3].addons
+              : checkedAddon;
           return (
             <>
               {addonsList.map((addon) => {
@@ -221,7 +240,7 @@ const Form = () => {
                   <div
                     key={addon.id}
                     className={` ${
-                      formAnswers[3]?.addons.includes(addon.id)
+                      checkeItemsList.includes(addon.id)
                         ? "border-fmblue-one bg-fmgrey-greyligher"
                         : "border-fmgrey-greylight bg-white"
                     } border  rounded-lg px-4 py-5  flex justify-between items-center`}>
@@ -229,7 +248,11 @@ const Form = () => {
                       id={addon.id}
                       addon={addon}
                       checkHandler={checkHandler}
-                      checkedItems={formAnswers[3]?.addons}
+                      ifChecked={
+                        checkeItemsList != undefined
+                          ? checkeItemsList.includes(addon.id)
+                          : false
+                      }
                     />
                     {planFrequency ? (
                       <div className={` text-fmblue-one text-xs`}>
@@ -246,37 +269,98 @@ const Form = () => {
             </>
           );
         })()}
-      {activeStep === 4 && (
-        <>
-          <div className={` bg-fmgrey-greyligher px-6 py-4`}>
-            <div className={` flex justify-between items-center`}>
-              <div>
-                <p className={` text-fmblue-dark`}>Arcade (Monthly)</p>
-                <button
-                  className={` hover:text-fmblue-one text-fmgrey-greylight  underline text-sm`}>
-                  Change
-                </button>
+      {activeStep === 4 &&
+        (() => {
+          const planSelectedId = formAnswers[2].plan;
+          const planSelectedName = plansArray.filter(
+            (item) => item.id === planSelectedId
+          );
+          const getAddons = () => {
+            const addonsIds = formAnswers[3]?.addons
+              ? formAnswers[3]?.addons
+              : checkedAddon;
+
+            if (addonsIds.length > 0) {
+              return addonsList.filter((item) => addonsIds.includes(item.id));
+            } else {
+              return [];
+            }
+          };
+          const addonsListed = getAddons();
+
+          const getTotal = () => {
+            const totalPrice = [];
+            addonsListed.forEach((item) => {
+              const itemPrice = planFrequency
+                ? item.addonPriceMonthlyNumber
+                : item.addonriceYearlyNumber;
+              totalPrice.push(itemPrice);
+            });
+
+            if (planFrequency) {
+              totalPrice.push(planSelectedName[0].planPriceMonthlyNumber);
+            } else {
+              totalPrice.push(planSelectedName[0].planPriceYearlyNumber);
+            }
+
+            // use reduce() method to find the sum
+            const sum = totalPrice.reduce((accumulator, currentValue) => {
+              return accumulator + currentValue;
+            }, 0);
+
+            return planFrequency ? `$ ${sum}/mo` : `$ ${sum}/yr`;
+          };
+
+          return (
+            <>
+              <div className={` bg-fmgrey-greyligher px-6 py-4`}>
+                <div className={` flex justify-between items-center`}>
+                  <div>
+                    <p className={` text-fmblue-dark`}>
+                      {planSelectedName[0].planName}(
+                      {planFrequency ? "Monthly" : "Yearly"})
+                    </p>
+                    <button
+                      onClick={() => setActiveStep(2)}
+                      className={` hover:text-fmblue-one text-fmgrey-greylight  underline text-sm`}>
+                      Change
+                    </button>
+                  </div>
+                  <p>
+                    {planFrequency
+                      ? planSelectedName[0].planPriceMonthly
+                      : planSelectedName[0].planPriceYearly}
+                  </p>
+                </div>
+                <hr className={` mt-6 mb-4`} />
+                <div className={` space-y-4`}>
+                  {addonsListed.map((item) => {
+                    return (
+                      <div
+                        key={item.addonName}
+                        className={` flex justify-between items-center`}>
+                        <p className={` text-fmgrey-grey text-sm`}>
+                          {item.addonName}
+                        </p>
+                        <p className={` text-fmblue-dark text-sm`}>
+                          {planFrequency
+                            ? item.addonPriceMonthly
+                            : item.addonPriceYearly}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-              <p>$9/mo</p>
-            </div>
-            <hr className={` mt-6 mb-4`} />
-            <div className={` space-y-4`}>
-              <div className={` flex justify-between items-center`}>
-                <p className={` text-fmgrey-grey text-sm`}>Online Service</p>
-                <p className={` text-fmblue-dark text-sm`}>+$1/mo</p>
+              <div className={` flex justify-between items-center px-6 py-4`}>
+                <p className={` text-fmgrey-grey text-sm `}>Total per month</p>
+                <p className={` text-xl text-fmblue-dark font-bold`}>
+                  {getTotal()}
+                </p>
               </div>
-              <div className={` flex justify-between items-center`}>
-                <p className={` text-fmgrey-grey text-sm`}>Online Service</p>
-                <p className={` text-fmblue-dark text-sm`}>+$1/mo</p>
-              </div>
-            </div>
-          </div>
-          <div className={` flex justify-between items-center px-6 py-4`}>
-            <p className={` text-fmgrey-grey text-sm `}>Total per month</p>
-            <p className={` text-xl text-fmblue-dark font-bold`}>$12/mo</p>
-          </div>
-        </>
-      )}
+            </>
+          );
+        })()}
     </div>
   );
 };

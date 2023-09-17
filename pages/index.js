@@ -4,7 +4,6 @@ import Layout from "@/components/Layout";
 import FormHeader from "@/components/FormHeader";
 import Form from "@/components/Form";
 import { ThankYouLarge, ThankYouMobile } from "@/components/svg/ThankYou";
-import { useEffect } from "react";
 
 export default function Home() {
   const { activeStep, steps } = useFormContext();
@@ -16,14 +15,15 @@ export default function Home() {
         {activeStep <= steps.length ? (
           steps.map((step, index) => {
             if (step.step === activeStep) {
-              console.log("run header step");
               return (
                 <FormHeader
-                  key={index}
+                  key={step.step}
                   title={step.header.title}
                   subtitle={step.header.subtitle}
                 />
               );
+            } else {
+              return null; // or any other JSX if you want to skip rendering
             }
           })
         ) : (

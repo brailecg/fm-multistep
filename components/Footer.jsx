@@ -6,12 +6,7 @@ const Footer = () => {
   const { activeStep, steps, formValidate, setActiveStep } = useFormContext();
 
   const nextStepForm = () => {
-    // setActiveStep(activeStep + 1);
     formValidate(activeStep);
-    // if (activeStep > steps.length) {
-    //   console.log("submit form here");
-    //   // submit form here
-    // }
   };
   return (
     <div

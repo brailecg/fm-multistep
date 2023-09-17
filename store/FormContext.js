@@ -16,8 +16,6 @@ export const FormProvider = ({ children }) => {
   const [formError, setFormError] = useState({});
 
   useEffect(() => {
-    console.log("call form header");
-
     // get form answers from localstorage
     initialAnswerHandler();
   }, []);
@@ -30,7 +28,9 @@ export const FormProvider = ({ children }) => {
   const initialAnswerHandler = () => {
     async function getFormAnswers() {
       return new Promise((resolve, reject) => {
-        const storedAnswers = localStorage.getItem("formAnswers");
+        const storedAnswers = localStorage.getItem("formAnswers")
+          ? localStorage.getItem("formAnswers")
+          : localStorage.setItem("formAnswers", JSON.stringify(formAnswers));
 
         if (storedAnswers) {
           const answers = JSON.parse(storedAnswers);
@@ -50,7 +50,6 @@ export const FormProvider = ({ children }) => {
         setSteps(appSteps);
         setFormAnswers(formAnswers);
         setAddonsList(addons);
-        console.log({ formAnswers });
 
         // Perform your app initialization here, using formAnswers as needed
       } catch (error) {
@@ -95,6 +94,12 @@ export const FormProvider = ({ children }) => {
         setFormError(errors);
       }
     } else if (step === 2) {
+      localStorage.setItem("formAnswers", JSON.stringify(formAnswers));
+      setActiveStep(step + 1);
+    } else if (step === 3) {
+      localStorage.setItem("formAnswers", JSON.stringify(formAnswers));
+      setActiveStep(step + 1);
+    } else if (step === 4) {
       setActiveStep(step + 1);
     }
   };

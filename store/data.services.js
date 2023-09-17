@@ -122,6 +122,8 @@ export const getAddonsArray = async () => [
     addonDescription: "Access to multiplayer games",
     addonPriceMonthly: "+$1/mo",
     addonPriceYearly: "+$10/yr",
+    addonPriceMonthlyNumber: 1,
+    addonriceYearlyNumber: 10,
     checked: false,
   },
   {
@@ -130,6 +132,8 @@ export const getAddonsArray = async () => [
     addonDescription: "Extra 1TB of cloud save",
     addonPriceMonthly: "+$2/mo",
     addonPriceYearly: "+$20/yr",
+    addonPriceMonthlyNumber: 2,
+    addonriceYearlyNumber: 20,
     checked: false,
   },
   {
@@ -138,6 +142,8 @@ export const getAddonsArray = async () => [
     addonDescription: "Custom theme on your profile",
     addonPriceMonthly: "+$2/mo",
     addonPriceYearly: "+$20/yr",
+    addonPriceMonthlyNumber: 2,
+    addonriceYearlyNumber: 20,
     checked: false,
   },
 ];

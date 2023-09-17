@@ -1,16 +1,17 @@
 import React from "react";
 
-const FormCheckbox = ({ id, addon, checkHandler, checkedItems }) => {
+const FormCheckbox = ({ id, addon, checkHandler, ifChecked }) => {
   return (
     <div className="w-full flex gap-2">
       <input
-        onChange={(e) => checkHandler(e.target.checked)}
+        onChange={(e) => checkHandler(e.target.checked, id)}
         className="
         peer relative appearance-none shrink-0 w-5 h-5 border border-[#D6D9E6] rounded-md mt-1 bg-white
         focus:outline-none focus:ring-offset-0 focus:ring-1 focus:ring-blue-100
         checked:bg-[#483EFF] checked:border-0
         disabled:border-steel-400 disabled:bg-steel-400
       "
+        checked={ifChecked}
         type="checkbox"
         id={id}
       />
