@@ -15,51 +15,43 @@ export const FormProvider = ({ children }) => {
   const [addonsList, setAddonsList] = useState({});
   const [formError, setFormError] = useState({});
 
+  async function getFormAnswers() {
+    return new Promise((resolve, reject) => {
+      const storedAnswers = localStorage.getItem("formAnswers")
+        ? localStorage.getItem("formAnswers")
+        : localStorage.setItem("formAnswers", JSON.stringify(formAnswers));
+
+      if (storedAnswers) {
+        const answers = JSON.parse(storedAnswers);
+        resolve(answers);
+      } else {
+        reject("formAnswers not found in localStorage");
+      }
+    });
+  }
+
   useEffect(() => {
-    // get form answers from localstorage
-    initialAnswerHandler();
-  }, []);
-
-  const checkAppLocalStorage = () => {
-    const isAnswersEmpty = !localStorage.getItem("formAnswers");
-    return { isAnswersEmpty };
-  };
-
-  const initialAnswerHandler = () => {
-    async function getFormAnswers() {
-      return new Promise((resolve, reject) => {
-        const storedAnswers = localStorage.getItem("formAnswers")
-          ? localStorage.getItem("formAnswers")
-          : localStorage.setItem("formAnswers", JSON.stringify(formAnswers));
-
-        if (storedAnswers) {
-          const answers = JSON.parse(storedAnswers);
-          resolve(answers);
-        } else {
-          reject("formAnswers not found in localStorage");
-        }
-      });
-    }
-
-    async function initializeApp() {
+    async function fetchData() {
       try {
-        const formAnswers = await getFormAnswers();
+        // Fetch data
+        const formAnswersData = await getFormAnswers();
         const appSteps = await getStepsArray();
         const addons = await getAddonsArray();
-        // Now you have the formAnswers data, and you can use it for initialization
-        setSteps(appSteps);
-        setFormAnswers(formAnswers);
-        setAddonsList(addons);
 
-        // Perform your app initialization here, using formAnswers as needed
+        // Update state
+        setFormAnswers(formAnswersData);
+        setSteps(appSteps);
+        setAddonsList(addons);
       } catch (error) {
-        // Handle the case where formAnswers are not found in localStorage
+        // Handle errors if necessary
         console.error(error);
       }
     }
-    // Call the initializeApp function to start the initialization process
-    initializeApp();
-  };
+
+    fetchData(); // Call the fetchData function
+
+    // Additional initialization code can go here
+  }, []);
 
   const formValidate = (step) => {
     if (step === 1) {
