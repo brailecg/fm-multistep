@@ -3,7 +3,6 @@ import { useFormContext } from "@/store/FormContext";
 import Layout from "@/components/Layout";
 import FormHeader from "@/components/FormHeader";
 import Form from "@/components/Form";
-import { ThankYouLarge, ThankYouMobile } from "@/components/svg/ThankYou";
 
 export default function Home() {
   const { activeStep, steps } = useFormContext();

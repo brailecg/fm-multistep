@@ -363,7 +363,7 @@ const Form = () => {
           );
         })()}
 
-      {activeStep > steps.length && (
+      {activeStep === 5 && (
         <div className={` h-full flex flex-col items-center justify-center`}>
           <div className={` hidden md:block`}>
             <ThankYouLarge />
@@ -380,6 +380,11 @@ const Form = () => {
             our platform. If you ever need support, please feel free to email us
             at support@loremgaming.com.
           </p>
+          <button
+            onClick={() => setActiveStep(1)}
+            className={` hover:text-fmblue-one text-fmgrey-greylight  underline text-sm`}>
+            Go to Step 1
+          </button>
         </div>
       )}
     </div>
