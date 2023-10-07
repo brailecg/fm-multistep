@@ -25,7 +25,7 @@ export const FormProvider = ({ children }) => {
         const answers = JSON.parse(storedAnswers);
         resolve(answers);
       } else {
-        reject("formAnswers not found in localStorage");
+        resolve({});
       }
     });
   }
@@ -34,9 +34,11 @@ export const FormProvider = ({ children }) => {
     async function fetchData() {
       try {
         // Fetch data
-        const formAnswersData = await getFormAnswers();
-        const appSteps = await getStepsArray();
-        const addons = await getAddonsArray();
+        const [formAnswersData, appSteps, addons] = await Promise.all([
+          getFormAnswers(),
+          getStepsArray(),
+          getAddonsArray(),
+        ]);
 
         // Update state
         setFormAnswers(formAnswersData);
@@ -108,7 +110,7 @@ export const FormProvider = ({ children }) => {
         formError,
         addonsList,
       }}>
-      {formAnswers !== undefined && children}
+      {children}
     </FormContext.Provider>
   );
 };
